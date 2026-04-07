@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flight Price Tracker — HEL ↔ MIA</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
+</head>
+<body>
+  <header>
+    <h1>✈️ Flight Price Tracker</h1>
+    <p class="subtitle" id="route-subtitle">Loading…</p>
+  </header>
+
+  <main>
+    <!-- Price History Chart -->
+    <section class="card chart-section">
+      <h2>Price History</h2>
+      <div class="chart-container">
+        <canvas id="priceChart"></canvas>
+      </div>
+      <p class="empty-state" id="empty-state" style="display:none">
+        No price data yet. Data will appear after the first scheduled check.
+      </p>
+    </section>
+
+    <!-- Current Cheapest -->
+    <section class="card stats-row" id="stats-row" style="display:none">
+      <div class="stat">
+        <span class="stat-label">Current Cheapest</span>
+        <span class="stat-value" id="stat-cheapest">—</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Lowest Recorded</span>
+        <span class="stat-value" id="stat-lowest">—</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Threshold</span>
+        <span class="stat-value" id="stat-threshold">—</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Trend</span>
+        <span class="stat-value" id="stat-trend">—</span>
+      </div>
+    </section>
+
+    <!-- Search Configuration -->
+    <section class="card config-section">
+      <h2>Search Configuration</h2>
+      <form id="config-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="origin">Origin (IATA code)</label>
+            <input type="text" id="origin" maxlength="3" placeholder="HEL" required>
+          </div>
+          <div class="form-group">
+            <label for="destination">Destination (IATA code)</label>
+            <input type="text" id="destination" maxlength="3" placeholder="MIA" required>
+          </div>
+          <div class="form-group">
+            <label for="departure_date">Departure Date</label>
+            <input type="date" id="departure_date" required>
+          </div>
+          <div class="form-group">
+            <label for="return_date">Return Date</label>
+            <input type="date" id="return_date" required>
+          </div>
+          <div class="form-group">
+            <label for="adults">Adults</label>
+            <input type="number" id="adults" min="1" max="9" required>
+          </div>
+          <div class="form-group">
+            <label for="children">Children</label>
+            <input type="number" id="children" min="0" max="9" required>
+          </div>
+          <div class="form-group">
+            <label for="stops">Stops</label>
+            <select id="stops">
+              <option value="0">Direct only</option>
+              <option value="1">1 stop or fewer</option>
+              <option value="2">2 stops or fewer</option>
+              <option value="3">Any</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="price_threshold_eur">Price Threshold (EUR)</label>
+            <input type="number" id="price_threshold_eur" min="1" step="50" required>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="save-btn">Save Configuration</button>
+          <span class="save-status" id="save-status"></span>
+        </div>
+      </form>
+
+      <!-- GitHub token for direct saves -->
+      <details class="token-section">
+        <summary>GitHub API Token (optional — enables saving from browser)</summary>
+        <p>To save config changes directly from this dashboard, provide a GitHub Personal Access Token with <code>repo</code> scope.</p>
+        <div class="form-group">
+          <input type="password" id="github-token" placeholder="ghp_xxxxxxxxxxxx">
+          <button type="button" class="btn btn-small" id="save-token-btn">Save Token</button>
+          <button type="button" class="btn btn-small btn-danger" id="clear-token-btn">Clear</button>
+        </div>
+        <div class="form-group">
+          <label for="repo-owner">Repository Owner</label>
+          <input type="text" id="repo-owner" placeholder="your-github-username">
+        </div>
+        <div class="form-group">
+          <label for="repo-name">Repository Name</label>
+          <input type="text" id="repo-name" placeholder="flight-price-agent">
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <footer>
+    <p>Checks run daily via GitHub Actions. Alerts sent via SendGrid when price drops below threshold.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

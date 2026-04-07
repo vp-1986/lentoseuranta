@@ -1,0 +1,10 @@
+{
+  "origin": "HEL",
+  "destination": "MIA",
+  "departure_date": "2027-03-25",
+  "return_date": "2027-04-06",
+  "adults": 2,
+  "children": 2,
+  "stops": 0,
+  "price_threshold_eur": 3000
+}
